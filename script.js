@@ -1,22 +1,41 @@
+angular.module('myApp', [])
+  .controller('mainCtrl', mainCtrl)
+  .directive('avatar', avatarDirective);
 
-angular.module('app', [])
-  .controller('mainCtrl', mainCtrl);
+function mainCtrl($scope) {
 
-function mainCtrl ($scope) {
-  
-  /**
-   * Let's just make sure something happens when the user submits the form
-   * by binding the declared 'addNew' function to the scope. You can see we
-   * are expecting a user object as a parameter. This is 'userForm'
-   */
-  $scope.addNew = function (user) {
-    $scope.users.push({ 
+  $scope.users = [];
+
+  $scope.addNew = function(user) {
+    $scope.users.push({
       name: user.name,
       avatarUrl: user.url
-    }); /* [1] */
-    
-    user.name = ''; /* [2] */
-    user.url = ''; /* [2] */
+    });
+
+    user.name = '';
+    user.url = '';
   };
+}
+
+function avatarDirective() {
+  return {
+    scope: {
+      user: '='
+    },
+    restrict: 'E',
+    template: (
+      '<div class="Avatar">' +
+      '<img ng-src="{{user.avatarUrl}}" />' +
+      '<h4>{{user.name}}</h4>' +
+      '</div>'
+    ),
+    link: link
   };
+
+  function link(scope) {
+    if (!scope.user.avatarUrl) {
+      scope.user.avatarUrl = 'http://thealmanac.org/assets/img/default_avatar.png';
+    }
+  }
+
 }
